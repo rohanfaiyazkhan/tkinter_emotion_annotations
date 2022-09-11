@@ -1,0 +1,7 @@
+train_set
+sampled_train_set
+
+.env
+.ipynb_checkpoints
+.vscode
+/**/__pycache__
