@@ -8,6 +8,8 @@ from utils import verify_image, resize_with_padding
 import os
 import datetime
 
+pd.options.mode.chained_assignment = None  # silence chained assignment warning
+
 root_dir = Path("./sampled_train_set")
 image_dir = root_dir / "images"
 annotations_dir = root_dir / "annotations"
@@ -76,7 +78,7 @@ code_classes = {
     "public_figure": {"text": "If not an actor, is this a public figure?", "codes": public_figure},
     "posing": {"text": "Is this person posing?", "codes": posing_code},
     "looking_at_camera": {"text": "Is this person looking straight at the camera?", "codes": looking_code},
-    "label_makes_sense": {"text": "Does the label make any sense?", "codes": label_makes_sense},
+    "label_makes_sense": {"text": "Does the label ({}) make any sense?", "codes": label_makes_sense},
     "facial_expression": {"text": "What is the facial expression?", "codes": facial_expression_codes},
     "skin_tone": {"text": "Which color matches person's skin tone?", "codes": skin_tone_colors}
 }
@@ -242,7 +244,13 @@ class Window(Frame):
         for i, name in enumerate(binary_label_columns):
 
             code_dictionary = code_classes[name]
-            text = code_dictionary["text"]
+
+            facial_exp = self.label_text
+
+            if name == "label_makes_sense":
+                text = code_dictionary["text"].format(facial_exp)
+            else:
+                text = code_dictionary["text"]
 
             frame = Frame(self, bd=6)
             instruction = Label(frame, text=text)
